@@ -1,8 +1,5 @@
 package com.yuenengfanhua.protocolhandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -12,47 +9,108 @@ import java.io.InputStream;
  * This class to throttle the download speed according to the limit
  */
 public class ThrottledInputStream extends InputStream {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final InputStream rawStream;
-    private long totalBytesRead;
-    private long startTimeMillis;
+    private final long maxBytesPerSec;
+    private final long startTime = System.currentTimeMillis();
 
-    private static final int BYTES_PER_KILOBYTE = 1024;
-    private static final int MILLIS_PER_SECOND = 1000;
-    private final int ratePerMillis;
+    private long bytesRead = 0;
+    private long totalSleepTime = 0;
 
-    public ThrottledInputStream(InputStream rawStream, int limit) {
+    private static final long SLEEP_DURATION_MS = 50;
+
+    public ThrottledInputStream(InputStream rawStream) {
+        this(rawStream, Long.MAX_VALUE);
+    }
+
+    public ThrottledInputStream(InputStream rawStream, long maxBytesPerSec) {
+        assert maxBytesPerSec > 0 : "Bandwidth " + maxBytesPerSec + " is invalid";
         this.rawStream = rawStream;
-        ratePerMillis = limit * BYTES_PER_KILOBYTE / MILLIS_PER_SECOND;
+        this.maxBytesPerSec = maxBytesPerSec;
     }
 
-    private void throttle(int size) {
-        if (startTimeMillis == 0) {
-            startTimeMillis = System.currentTimeMillis();
-        }
-        long now = System.currentTimeMillis();
-        long interval = now - startTimeMillis;
-        //see if we are too fast..
-        if (interval * ratePerMillis < totalBytesRead + size) { //+size because we are reading size byte
-            try {
-                final long sleepTime = (totalBytesRead + size) / ratePerMillis - interval; // will most likely only be relevant on the first few passes
-                Thread.sleep(Math.max(1, sleepTime));
-            } catch (InterruptedException e) {
-                logger.warn("Throttle sleep interrupted...");
-            }
-        }
-        totalBytesRead += size;
-    }
-
+    /** @inheritDoc */
     @Override
     public int read() throws IOException {
-        throttle(1);
-        return rawStream.read();
+        throttle();
+        int data = rawStream.read();
+        if (data != -1) {
+            bytesRead++;
+        }
+        return data;
     }
 
+    /** @inheritDoc */
     @Override
-    public int read(byte b[]) throws IOException {
-        throttle(b.length);
-        return rawStream.read(b);
+    public int read(byte[] b) throws IOException {
+        throttle();
+        int readLen = rawStream.read(b);
+        if (readLen != -1) {
+            bytesRead += readLen;
+        }
+        return readLen;
+    }
+
+    /** @inheritDoc */
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        throttle();
+        int readLen = rawStream.read(b, off, len);
+        if (readLen != -1) {
+            bytesRead += readLen;
+        }
+        return readLen;
+    }
+
+    private void throttle() throws IOException {
+        if (getBytesPerSec() > maxBytesPerSec) {
+            try {
+                Thread.sleep(SLEEP_DURATION_MS);
+                totalSleepTime += SLEEP_DURATION_MS;
+            } catch (InterruptedException e) {
+                throw new IOException("Thread aborted", e);
+            }
+        }
+    }
+
+    /**
+     * Getter for the number of bytes read from this stream, since creation.
+     * @return The number of bytes.
+     */
+    public long getTotalBytesRead() {
+        return bytesRead;
+    }
+
+    /**
+     * Getter for the read-rate from this stream, since creation.
+     * Calculated as bytesRead/elapsedTimeSinceStart.
+     * @return Read rate, in bytes/sec.
+     */
+    public long getBytesPerSec() {
+        long elapsed = (System.currentTimeMillis() - startTime) / 1000;
+        if (elapsed == 0) {
+            return bytesRead;
+        } else {
+            return bytesRead / elapsed;
+        }
+    }
+
+    /**
+     * Getter the total time spent in sleep.
+     * @return Number of milliseconds spent in sleep.
+     */
+    public long getTotalSleepTime() {
+        return totalSleepTime;
+    }
+
+    /** @inheritDoc */
+    @Override
+    public String toString() {
+        return "ThrottledInputStream{" +
+                "bytesRead=" + bytesRead +
+                ", maxBytesPerSec=" + maxBytesPerSec +
+                ", bytesPerSec=" + getBytesPerSec() +
+                ", totalSleepTime=" + totalSleepTime +
+                '}';
     }
 }

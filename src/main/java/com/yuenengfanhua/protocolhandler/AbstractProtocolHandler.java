@@ -22,15 +22,31 @@ public abstract class AbstractProtocolHandler implements ProtocolHandler{
 
     private int limit; // download speed limit in kbps
 
+    /**
+     * @param downloadDir directory of all downloaded files
+     * @param limit download speed limit
+     * initailize the class, set download directory and download speed limit
+     */
     public void init(String downloadDir, int limit) {
         this.downloadDir = downloadDir;
         this.limit = limit;
     }
 
+    /**
+     * Get file status of the current file
+     * @return FileStatus to be returned
+     */
     public FileStatus getStatus() {
         return status;
     }
 
+    /**
+     * @param inStream inputStream, passed by inherited class
+     * @param outStream outputStream, here refers to output file stream
+     * @param info fileInfo, used for logging progress of this file
+     *
+     * This method contains the common function of all handler, reading from input stream and output to file output stream.
+     */
     protected void process(InputStream inStream, FileOutputStream outStream, FileInfo info) throws MalformedURLException, IOException {
         ThrottledInputStream inThrottleStream = new ThrottledInputStream(inStream, limit);
         byte[] buf=new byte[8192]; // having a small buffer and write in stream to forbid memory flow

@@ -1,10 +1,9 @@
 package com.yuenengfanhua;
 
+import com.yuenengfanhua.protocolhandler.FileStatus;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,15 +28,14 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = FileDownloaderApplication.class)
 public class FileDownloaderApplicationTests {
-	@Rule
-	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
 	public static String CONFIG_LOCATION="src/test/resources/filelist.txt";
 	public static List<String> lines = Arrays.asList(
 			"http://www.google.com.sg/index.html",
 			"ftp://demo.wftpserver.com:21/download/jupload.zip;demo-user;demo-user",
 			"sftp://test.rebex.net:22/pub/example/readme.txt;demo;password",
-			"//ftp://test.com/a.zip"
+			"//http://test.com/b.zip",
+			"//ftp://test.com:21/a.zip"
 	);
 
 	@Autowired
@@ -77,8 +75,27 @@ public class FileDownloaderApplicationTests {
 	}
 
 	@Test
+	public void taskFinishTest() {
+		assertEquals(null,service.get());
+	}
+
+	@Test
 	public void assertFileDownloaded() {
+		// assert the file specified are all downloaded
 		File file1 = new File(downloadDir+"index.html");
 		assertTrue(file1.exists());
+
+		File file2 = new File(downloadDir+"readme.txt");
+		assertTrue(file2.exists());
+
+		File file3 = new File(downloadDir+"jupload.zip");
+		assertTrue(file3.exists());
+	}
+
+	@Test
+	public void assertDownloadSuccess() {
+		Collection<FileStatus> statusList = service.getStatus().values();
+		assertEquals(3, statusList.stream().filter(x->x==FileStatus.Success).count());
+		//assertEquals(1, statusList.stream().filter(x->x==FileStatus.Fail).count());
 	}
 }

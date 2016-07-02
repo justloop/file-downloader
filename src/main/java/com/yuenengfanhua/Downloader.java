@@ -36,18 +36,34 @@ public class Downloader implements Runnable{
     private FileInfo currentFile;
     private int id = 0;
 
+    /**
+     * to be initialized before thread run, easy to identify which thread is handling the file in logging
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Common method for info log
+     * @param message
+     */
     private void log_info(String message) {
         logger.info("[Thread-"+id + "] "+message);
     }
 
+    /**
+     * Common method of error log
+     * @param file
+     * @param e
+     */
     private void log_error(String file, Exception e) {
         logger.error("[Thread-"+id + "] Error reading file "+file, e);
     }
 
+    /**
+     * Use reflection to do dispatcher work, easy to extend protocol
+     */
     @Override
     public void run() {
         FileInfo file = service.get();
@@ -68,6 +84,12 @@ public class Downloader implements Runnable{
                 long end = System.currentTimeMillis();
                 log_info("File "+file+" download successful, time elapsed "+(end-start));
                 service.getStatus().put(file, FileStatus.Success);
+            } catch (ClassNotFoundException e) {
+                long end = System.currentTimeMillis();
+                log_info("File "+file+" download failed because protocol is not supported, time elapsed "+(end-start));
+                log_error(file.getUrl(), e);
+                deleteFile(file.getUrl());
+                service.getStatus().put(file, FileStatus.Fail);
             } catch (Exception e) {
                 long end = System.currentTimeMillis();
                 log_info("File "+file+" download failed, time elapsed "+(end-start));
@@ -80,8 +102,11 @@ public class Downloader implements Runnable{
         log_info("No more files...");
     }
 
+    /**
+     * Clear incomplete files
+     * @param file
+     */
     public void deleteFile(String file) {
-        // clear the incomplete files
         String location = downloadDir+ FilenameUtils.getName(file);
         File deleteFile = new File(location);
         if (deleteFile.exists()) {

@@ -31,6 +31,9 @@ public class FileDownloaderApplication implements CommandLineRunner {
 		SpringApplication.run(FileDownloaderApplication.class, args);
 	}
 
+	/**
+	 * Before start, get all the url from config file and put it in the task queue
+	 */
 	@PostConstruct
 	public void load(){
 		// load the url list from configuration and put it in the queue

@@ -37,19 +37,34 @@ public class DownloadService {
     // to remember the status of the download files
     private Map<FileInfo, FileStatus> fileStatusMap = new ConcurrentHashMap();
 
+    /**
+     * Put the file in the to be process queue, initialize the status
+     * @param file
+     */
     public void put(FileInfo file) {
         queue.offer(file);
         fileStatusMap.put(file,FileStatus.None);
     }
 
+    /**
+     * Useed for worker to get task from
+     * @return FileInfo
+     */
     public FileInfo get() {
         return queue.poll();
     }
 
+    /**
+     * Return the queue size
+     * @return size
+     */
     public int size() {
         return queue.size();
     }
 
+    /**
+     * Start the worker pool according to worker number in the config
+     */
     public void start() {
         logger.info("Start a worker pool of "+ workernum);
         IntStream.range(0, workernum).forEach(
@@ -61,6 +76,9 @@ public class DownloadService {
         );
     }
 
+    /**
+     * Shutdown the ThreadExcutor
+     */
     public void shutdown() {
         executor.shutdown();
 
@@ -73,6 +91,9 @@ public class DownloadService {
 
     }
 
+    /**
+     * return the file status
+     */
     public Map<FileInfo, FileStatus> getStatus() {
         return fileStatusMap;
     }

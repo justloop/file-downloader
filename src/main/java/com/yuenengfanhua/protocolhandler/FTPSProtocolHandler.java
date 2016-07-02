@@ -32,7 +32,7 @@ public class FTPSProtocolHandler extends AbstractProtocolHandler{
         FileOutputStream fout = null;
         FTPSClient client = null;
         try {
-            client = getFTPSClient(aUrl.getHost(), file.getUsername(), file.getPassword(), aUrl.getPort());
+            client = getFTPSClient(aUrl.getHost(), file.getUsername(), file.getPassword(), aUrl.getPort()>0?aUrl.getPort():21);
             in = client.retrieveFileStream(aUrl.getPath());
             fout = new FileOutputStream(downloadDir+ FilenameUtils.getName(file.getUrl()));
             super.process(in,fout,file);
