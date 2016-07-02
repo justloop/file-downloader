@@ -28,7 +28,7 @@ public class DownloadService {
     @Autowired
     private ObjectFactory<Downloader> downloaderObjectFactory;
 
-    //List of downloader
+    //List of downloader, can never go beyond MAX_WORKER works
     private ExecutorService executor = Executors.newFixedThreadPool(MAX_WORKERS);
 
     // queue of to be download resources

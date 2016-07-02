@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 /**
  * Created by gejun on 1/7/16.
+ * 
+ * This class to throttle the download speed according to the limit
  */
 public class ThrottledInputStream extends InputStream {
     private final InputStream rawStream;

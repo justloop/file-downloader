@@ -81,6 +81,7 @@ public class Downloader implements Runnable{
     }
 
     public void deleteFile(String file) {
+        // clear the incomplete files
         String location = downloadDir+ FilenameUtils.getName(file);
         File deleteFile = new File(location);
         if (deleteFile.exists()) {

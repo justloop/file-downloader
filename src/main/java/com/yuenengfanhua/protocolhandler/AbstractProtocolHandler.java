@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 
 /**
  * Created by gejun on 1/7/16.
+ *
+ * Combine the common functionality of Protocol handlers
  */
 public abstract class AbstractProtocolHandler implements ProtocolHandler{
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -30,7 +32,7 @@ public abstract class AbstractProtocolHandler implements ProtocolHandler{
 
     protected void process(InputStream inStream, FileOutputStream outStream) throws MalformedURLException, IOException {
         ThrottledInputStream inThrottleStream = new ThrottledInputStream(inStream, limit);
-        byte[] buf=new byte[8192];
+        byte[] buf=new byte[8192]; // having a small buffer and write in stream to forbid memory flow
         int bytesread = 0, bytesBuffered = 0;
         while( (bytesread = inThrottleStream.read( buf )) > -1 ) {
             outStream.write( buf, 0, bytesread );

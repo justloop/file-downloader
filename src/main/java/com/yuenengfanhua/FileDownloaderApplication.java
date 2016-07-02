@@ -33,12 +33,13 @@ public class FileDownloaderApplication implements CommandLineRunner {
 
 	@PostConstruct
 	public void load(){
+		// load the url list from configuration and put it in the queue
 		try {
 			final InputStream inputStream = FileList.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 			String line;
 			while ((line = br.readLine()) != null) {
-				if(line.startsWith("//"))
+				if(line.startsWith("//")) // ignore the comment off lines
 					continue;
 
 				//put into the queue
