@@ -6,7 +6,7 @@ Currently FTP, SFTP, HTTP, HTTPS, FILE. It can be easily extended by inherit abs
 
 ## URL List File
 
-Program will look for filelist.txt in /src/main/resources/ folder. Format:
+Program will look for filelist.txt in classpath. Format:
 
 protocol://server:port/path_of_file;username;password
 
@@ -25,3 +25,15 @@ workers -- number of workers to initialize in the worker pool, or the maximum co
 limit -- throttle download speed of each worker, to prevent one worker take up all the bandwidth. Set to a large number if no need for throttling
 
 download_dir -- location of the download folder
+
+## Build and Run
+
+use:
+
+mvn install
+
+to generate a bundled jar
+
+run:
+
+java -jar target/filedownloader*.jar
