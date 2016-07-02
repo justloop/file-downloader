@@ -5,13 +5,13 @@ import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = FileDownloaderApplication.class)
 public class FileDownloaderApplicationTests {
+	private static final Logger logger = LoggerFactory.getLogger(FileDownloaderApplicationTests.class);
 
 	public static String CONFIG_LOCATION="src/test/resources/filelist.txt";
 	public static List<String> lines = Arrays.asList(
@@ -38,9 +39,6 @@ public class FileDownloaderApplicationTests {
 			"//ftp://test.com:21/a.zip"
 	);
 
-	@Autowired
-	private ApplicationContext applicationContext;
-
 	@Value("${download_dir}")
 	protected String downloadDir = ""; // download folder
 
@@ -50,12 +48,9 @@ public class FileDownloaderApplicationTests {
 	public static void prepare() throws IOException {
 		Path file = Paths.get(CONFIG_LOCATION);
 		Files.write(file, lines, Charset.forName("UTF-8"));
-	}
 
-	@PreDestroy
-	public void init() throws IOException {
-		//clear the folder
-		File dir = new File(downloadDir);
+		logger.info("Clearing testing directory test_download");
+		File dir = new File("test_download");
 		FileUtils.cleanDirectory(dir);
 	}
 

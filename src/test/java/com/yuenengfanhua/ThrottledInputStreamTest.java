@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.io.*;
 
 public class ThrottledInputStreamTest {
-    private static final Log LOG = LogFactory.getLog(ThrottledInputStreamTest.class);
+    private static final Log logger = LogFactory.getLog(ThrottledInputStreamTest.class);
     private static final int BUFF_SIZE = 1024;
 
     private enum CB {ONE_C, BUFFER, BUFF_OFFSET}
@@ -45,7 +45,7 @@ public class ThrottledInputStreamTest {
       copyAndAssert(tmpFile, outFile, maxBandwidth, 50, 0, CB.ONE_C);
 */
         } catch (IOException e) {
-            LOG.error("Exception encountered ", e);
+            logger.error("Exception encountered ", e);
         }
     }
 
@@ -71,7 +71,7 @@ public class ThrottledInputStreamTest {
                 copyByteByByte(in, out);
             }
 
-            LOG.info(in);
+            logger.info(in);
             bandwidth = in.getBytesPerSec();
             Assert.assertEquals(in.getTotalBytesRead(), tmpFile.length());
             Assert.assertTrue(in.getBytesPerSec() > maxBandwidth / (factor * 1.2));

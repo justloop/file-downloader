@@ -67,7 +67,7 @@ public class FTPSProtocolHandler extends AbstractProtocolHandler{
         }
         ftpClient.enterLocalPassiveMode();
         ftpClient.enterRemotePassiveMode();
-        ftpClient.setBufferSize(8192);
+        ftpClient.setBufferSize(8192); // Avoid memory out
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE); // BINARY TYPE NEVER FAIL
         ftpClient.setAutodetectUTF8(true);
         return ftpClient;

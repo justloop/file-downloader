@@ -66,7 +66,7 @@ public class FTPProtocolHandler extends AbstractProtocolHandler{
             throw new IOException("username password not correct!");
         }
         ftpClient.enterLocalPassiveMode();
-        ftpClient.setBufferSize(8192);
+        ftpClient.setBufferSize(8192); // avoid memory out
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE); // BINARY TYPE NEVER FAIL
         ftpClient.setAutodetectUTF8(true);
         return ftpClient;
