@@ -35,7 +35,7 @@ public class FTPProtocolHandler extends AbstractProtocolHandler{
             client = getFTPClient(aUrl.getHost(), file.getUsername(), file.getPassword(), aUrl.getPort());
             in = client.retrieveFileStream(aUrl.getPath());
             fout = new FileOutputStream(downloadDir+ FilenameUtils.getName(file.getUrl()));
-            super.process(in,fout);
+            super.process(in,fout,file);
         } finally {
             if (in != null) {
                 in.close();

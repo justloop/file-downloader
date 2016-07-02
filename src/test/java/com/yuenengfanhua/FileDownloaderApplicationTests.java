@@ -13,4 +13,9 @@ public class FileDownloaderApplicationTests {
 	public void contextLoads() {
 	}
 
+	@Test
+	public void configReadTest() {
+
+	}
+
 }

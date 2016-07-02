@@ -31,7 +31,7 @@ public class HTTPProtocolHandler extends AbstractProtocolHandler{
             }
             in  = new URL(file.getUrl()).openStream();
             fout = new FileOutputStream(downloadDir+FilenameUtils.getName(file.getUrl()));
-            super.process(in,fout);
+            super.process(in,fout,file);
         }
         finally {
             if (in != null) {

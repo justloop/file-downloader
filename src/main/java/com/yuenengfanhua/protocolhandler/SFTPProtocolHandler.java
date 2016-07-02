@@ -44,7 +44,7 @@ public class SFTPProtocolHandler extends AbstractProtocolHandler{
             channelSftp = (ChannelSftp)channel;
             in = channelSftp.get(aUrl.getPath());
             fout = new FileOutputStream(downloadDir+ FilenameUtils.getName(file.getUrl()));
-            super.process(in,fout);
+            super.process(in,fout,file);
         } catch (SftpException | JSchException e) {
             logger.error("Error with Jsch client "+ e.getMessage(), e);
             throw new IOException("Error with Jsch client");

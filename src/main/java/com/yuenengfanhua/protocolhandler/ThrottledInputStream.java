@@ -1,5 +1,8 @@
 package com.yuenengfanhua.protocolhandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -9,6 +12,7 @@ import java.io.InputStream;
  * This class to throttle the download speed according to the limit
  */
 public class ThrottledInputStream extends InputStream {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final InputStream rawStream;
     private long totalBytesRead;
     private long startTimeMillis;
@@ -22,32 +26,33 @@ public class ThrottledInputStream extends InputStream {
         ratePerMillis = limit * BYTES_PER_KILOBYTE / MILLIS_PER_SECOND;
     }
 
-    private void throttle() {
+    private void throttle(int size) {
         if (startTimeMillis == 0) {
             startTimeMillis = System.currentTimeMillis();
         }
         long now = System.currentTimeMillis();
         long interval = now - startTimeMillis;
         //see if we are too fast..
-        if (interval * ratePerMillis < totalBytesRead + 1) { //+1 because we are reading 1 byte
+        if (interval * ratePerMillis < totalBytesRead + size) { //+size because we are reading size byte
             try {
-                final long sleepTime = ratePerMillis / (totalBytesRead + 1) - interval; // will most likely only be relevant on the first few passes
+                final long sleepTime = (totalBytesRead + size) / ratePerMillis - interval; // will most likely only be relevant on the first few passes
                 Thread.sleep(Math.max(1, sleepTime));
-            } catch (InterruptedException e) {//never realized what that is good for :)
+            } catch (InterruptedException e) {
+                logger.warn("Throttle sleep interrupted...");
             }
         }
-        totalBytesRead += 1;
+        totalBytesRead += size;
     }
 
     @Override
     public int read() throws IOException {
-        throttle();
+        throttle(1);
         return rawStream.read();
     }
 
     @Override
     public int read(byte b[]) throws IOException {
-        throttle();
+        throttle(b.length);
         return rawStream.read(b);
     }
 }

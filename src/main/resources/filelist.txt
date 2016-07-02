@@ -1,4 +1,4 @@
-//http://mirror.nus.edu.sg/apache/flume/1.5.0/apache-flume-1.5.0-bin.tar.gz
+http://mirror.nus.edu.sg/apache/flume/1.5.0/apache-flume-1.5.0-bin.tar.gz
 //http://mirror.nus.edu.sg/centos/6.8/storage/x86_64/gluster-3.6/glusterfs-3.6.9-1.el6.x86_64.rpm
 //http://mirror.nus.edu.sg/centos/6.8/storage/x86_64/gluster-3.6/glusterfs-api-3.6.8-1.el6.x86_64.rpm
 //http://mirror.nus.edu.sg/centos/6.8/storage/x86_64/gluster-3.6/glusterfs-api-3.6.9-1.el6.x86_64.rpm
@@ -10,5 +10,5 @@
 //https://gperftools.googlecode.com/files/gperftools-2.1.tar.gz
 //ftp://demo.wftpserver.com:21/download/jupload.zip;demo-user;demo-user
 //sftp://demo.wftpserver.com:2222/download/googledocs.zip;demo-user;demo-user
-sftp://test.rebex.net:22/pub/example/readme.txt;demo;password
+//sftp://test.rebex.net:22/pub/example/readme.txt;demo;password
 //ftps://demo.wftpserver.com:990/download/version.txt;demo-user;demo-user

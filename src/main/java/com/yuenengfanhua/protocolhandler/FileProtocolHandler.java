@@ -27,7 +27,7 @@ public class FileProtocolHandler extends AbstractProtocolHandler{
         {
             in  = new FileInputStream(file.getUrl());
             fout = new FileOutputStream(downloadDir+ FilenameUtils.getName(file.getUrl()));
-            super.process(in,fout);
+            super.process(in,fout,file);
         }
         finally {
             if (in != null) {
