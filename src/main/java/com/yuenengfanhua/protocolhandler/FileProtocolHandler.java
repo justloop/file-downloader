@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
  * Created by gejun on 1/7/16.
  */
 @Component
-public class FileProtocolHandler extends AbstractProtocolHandler{
+public class FILEProtocolHandler extends AbstractProtocolHandler{
     @Override
     public String getName() {
         return "FileProtocolHandler";
