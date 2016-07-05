@@ -1,5 +1,7 @@
 # File Downloader
 
+Project tested in travis CI:
+
 [![Build Status](https://travis-ci.org/yuenengfanhua/file-downloader.svg?branch=master)](https://travis-ci.org/yuenengfanhua/file-downloader)
 
 ## Support protocols
