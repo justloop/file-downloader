@@ -1,5 +1,7 @@
 # File Downloader
 
+[![Build Status](https://travis-ci.org/yuenengfanhua/file-downloader.svg?branch=master)](https://travis-ci.org/yuenengfanhua/file-downloader)
+
 ## Support protocols
 
 Currently FTP, SFTP, HTTP, HTTPS, FILE. It can be easily extended by inherit abstractProtocolHandler class
