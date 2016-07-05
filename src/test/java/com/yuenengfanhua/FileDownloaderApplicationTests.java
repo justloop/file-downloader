@@ -32,7 +32,7 @@ public class FileDownloaderApplicationTests {
 
 	public static String CONFIG_LOCATION="src/test/resources/filelist.txt";
 	public static List<String> lines = Arrays.asList(
-			"http://www.google.com.sg/index.html",
+			"http://example.com/index.html",
 			"ftp://demo.wftpserver.com:21/download/jupload.zip;demo-user;demo-user",
 			"sftp://test.rebex.net:22/pub/example/readme.txt;demo;password",
 			"//http://test.com/b.zip",
