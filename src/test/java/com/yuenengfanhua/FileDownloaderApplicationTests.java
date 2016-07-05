@@ -2,6 +2,7 @@ package com.yuenengfanhua;
 
 import com.yuenengfanhua.protocolhandler.FileStatus;
 import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,7 @@ public class FileDownloaderApplicationTests {
 	@Autowired DownloadService service;
 
 	@BeforeClass
-	public static void prepare() throws IOException {
+	public static void cleanForNext() throws IOException {
 		Path file = Paths.get(CONFIG_LOCATION);
 		Files.write(file, lines, Charset.forName("UTF-8"));
 
