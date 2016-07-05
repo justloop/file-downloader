@@ -56,6 +56,7 @@ public class FileDownloaderApplicationTests {
 
 	@Test
 	public void configTest() {
+		logger.info("configTest");
 		assertEquals(3,service.getStatus().size());
 
 		Collection<FileInfo> fileInfos = service.getStatus().keySet();
@@ -71,11 +72,13 @@ public class FileDownloaderApplicationTests {
 
 	@Test
 	public void taskFinishTest() {
+		logger.info("taskFinishTest");
 		assertEquals(null,service.get());
 	}
 
 	@Test
 	public void assertFileDownloaded() {
+		logger.info("assertFileDownloaded");
 		// assert the file specified are all downloaded
 		File file1 = new File(downloadDir+"index.html");
 		assertTrue(file1.exists());
@@ -89,6 +92,7 @@ public class FileDownloaderApplicationTests {
 
 	@Test
 	public void assertDownloadSuccess() {
+		logger.info("assertDownloadSuccess");
 		Collection<FileStatus> statusList = service.getStatus().values();
 		assertEquals(3, statusList.stream().filter(x->x==FileStatus.Success).count());
 		//assertEquals(1, statusList.stream().filter(x->x==FileStatus.Fail).count());
