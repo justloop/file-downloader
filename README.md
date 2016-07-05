@@ -28,6 +28,8 @@ download_dir -- location of the download folder
 
 ## Build and Run
 
+dependency: maven, java 8
+
 use:
 
 mvn install

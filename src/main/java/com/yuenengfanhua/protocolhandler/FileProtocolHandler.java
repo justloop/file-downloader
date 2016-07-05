@@ -1,6 +1,7 @@
 package com.yuenengfanhua.protocolhandler;
 
 import com.yuenengfanhua.FileInfo;
+import com.yuenengfanhua.protocolhandler.AbstractProtocolHandler;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ import java.net.MalformedURLException;
  * Created by gejun on 1/7/16.
  */
 @Component
-public class FILEProtocolHandler extends AbstractProtocolHandler{
+public class FILEProtocolHandler extends AbstractProtocolHandler {
     @Override
     public String getName() {
         return "FileProtocolHandler";
@@ -38,4 +39,5 @@ public class FILEProtocolHandler extends AbstractProtocolHandler{
             }
         }
     }
+
 }
